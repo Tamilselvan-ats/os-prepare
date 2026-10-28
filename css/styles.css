@@ -1,0 +1,129 @@
+/* =============================================================================
+   CUSTOM STYLES & GLASSMORPHISM DESIGN SYSTEM
+   Duolingo Gamification + LeetCode Engineering Aesthetic
+   ============================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap');
+
+:root {
+  --bg-primary: #0a0f1d;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #1e293b;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --border-color: rgba(51, 65, 85, 0.6);
+  --accent-blue: #38bdf8;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-purple: #8b5cf6;
+  --accent-rose: #f43f5e;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-primary);
+  color: #f8fafc;
+  overflow-x: hidden;
+}
+
+code, pre, .font-mono {
+  font-family: 'Fira Code', monospace;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+}
+
+.glass-nav {
+  background: rgba(10, 15, 29, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0f1d;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Pulse Glows */
+.glow-blue {
+  box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.35);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.35);
+}
+
+.glow-amber {
+  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.35);
+}
+
+.glow-rose {
+  box-shadow: 0 0 25px -5px rgba(244, 63, 94, 0.35);
+}
+
+/* Card Flip Animation for Flashcards */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Badge Styling */
+.badge-unit2 {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.badge-unit3 {
+  background: rgba(139, 92, 246, 0.12);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Gantt Chart Bar Animation */
+.gantt-bar {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gantt-bar:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+}
+
+/* Custom Checkbox */
+input[type="checkbox"] {
+  accent-color: #38bdf8;
+}
+
+/* Code Syntax Highlight Simulator */
+.syntax-keyword { color: #f43f5e; font-weight: 600; }
+.syntax-type { color: #38bdf8; font-weight: 600; }
+.syntax-string { color: #34d399; }
+.syntax-comment { color: #64748b; font-style: italic; }
+.syntax-num { color: #fbbf24; }

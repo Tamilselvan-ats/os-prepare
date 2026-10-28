@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OS Master | Complete Operating Systems Interactive Platform</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              850: '#0f172a',
+              900: '#0b1120',
+              950: '#060a14'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#0a0f1d] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-black">
+
+  <!-- =========================================================================
+       TOP GLOBAL NAVIGATION BAR
+       ========================================================================= -->
+  <header class="sticky top-0 z-40 glass-nav border-b border-slate-800/80 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand & Syllabus Tag -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="app.switchTab('home')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-xl shadow-lg shadow-sky-500/20 font-black text-white">
+          OS
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-tight text-white">OS Master</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30">21CSC202J</span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Units 2 & 3 Interactive Learning Engine</p>
+        </div>
+      </div>
+
+      <!-- Global Instant Search -->
+      <div id="search-wrapper" class="relative flex-1 max-w-md hidden md:block">
+        <div class="relative">
+          <input
+            type="text"
+            id="global-search-input"
+            placeholder="Search PCB, Semaphore, FCFS, Banker's, Deadlock..."
+            oninput="app.handleGlobalSearch(this.value)"
+            class="w-full px-4 py-2 pl-9 rounded-xl bg-slate-900/90 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all font-medium"
+          />
+          <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
+        </div>
+        <!-- Live Autocomplete Dropdown -->
+        <div id="global-search-results" class="hidden absolute top-11 left-0 right-0 glass-panel rounded-xl border border-slate-700 p-2 shadow-2xl z-50 max-h-72 overflow-y-auto"></div>
+      </div>
+
+      <!-- Status Hub: Streak, Course Progress & Gemini AI -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Streak Counter -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-bold" title="Daily Study Streak">
+          <span>🔥</span>
+          <span id="header-streak-count">1</span>
+        </div>
+
+        <!-- Course Mastery Bar -->
+        <div id="header-overall-progress" class="hidden sm:block"></div>
+
+        <!-- Gemini AI Status Indicator -->
+        <div id="ai-status-indicator"></div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN LAYOUT: SIDEBAR NAVIGATION + CONTENT VIEWPORT
+       ========================================================================= -->
+  <div class="flex-1 max-w-7xl w-full mx-auto flex flex-col md:flex-row px-4 lg:px-8 py-6 gap-6">
+
+    <!-- Sticky Left Navigation Bar -->
+    <aside class="w-full md:w-64 shrink-0 space-y-6">
+      <div class="glass-panel p-3.5 rounded-2xl border border-slate-800 space-y-1">
+        
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 py-1">Core Modules</div>
+        
+        <button data-tab="home" onclick="app.switchTab('home')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>🏠</span> Home & Roadmap
+        </button>
+
+        <button data-tab="unit-explorer" onclick="app.switchTab('unit-explorer')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>📚</span> Unit Explorer (7 Layers)
+        </button>
+
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-3 pb-1">Simulators</div>
+
+        <button data-tab="sim-cpu" onclick="app.switchTab('sim-cpu')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>⏱️</span> CPU Scheduler
+        </button>
+
+        <button data-tab="sim-rag" onclick="app.switchTab('sim-rag')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>🕸️</span> Deadlock & RAG
+        </button>
+
+        <button data-tab="sim-banker" onclick="app.switchTab('sim-banker')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>🏦</span> Banker's Algorithm
+        </button>
+
+        <button data-tab="sim-sync" onclick="app.switchTab('sim-sync')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>🔀</span> Synchronization Lab
+        </button>
+
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-3 pb-1">Study Tools</div>
+
+        <button data-tab="palace" onclick="app.switchTab('palace')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>🏰</span> Memory Palace
+        </button>
+
+        <button data-tab="coding" onclick="app.switchTab('coding')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>💻</span> Code Sandbox (C & Java)
+        </button>
+
+        <button data-tab="interview" onclick="app.switchTab('interview')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>💼</span> 300 Interview Qs
+        </button>
+
+        <button data-tab="exam" onclick="app.switchTab('exam')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>🎯</span> Exam Master (2-16M)
+        </button>
+
+        <button data-tab="flashcards" onclick="app.switchTab('flashcards')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>⚡</span> Flashcards
+        </button>
+
+        <button data-tab="quiz" onclick="app.switchTab('quiz')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-slate-400 hover:text-white border border-transparent">
+          <span>📝</span> Adaptive Quiz
+        </button>
+
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-3 pb-1">AI Assistant</div>
+
+        <button data-tab="ai-tutor" onclick="app.switchTab('ai-tutor')" class="nav-link w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center gap-2.5 transition-all text-emerald-400 hover:text-emerald-300 border border-transparent">
+          <span>🤖</span> Ask Gemini AI
+        </button>
+
+      </div>
+    </aside>
+
+    <!-- Main Dynamic Content Container -->
+    <main id="main-content-area" class="flex-1 min-w-0">
+      <!-- Injected by app.js router -->
+    </main>
+
+  </div>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="mt-auto border-t border-slate-800/80 py-6 text-center text-xs text-slate-500 font-medium">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>SRM Institute of Science and Technology · 21CSC202J Operating Systems</span>
+      <span class="text-slate-400">Guaranteed Zero Content Omission · Powered by Gemini AI</span>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL 1: GEMINI AI API KEY SETUP
+       ========================================================================= -->
+  <div id="ai-key-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full p-6 rounded-2xl border border-slate-700 space-y-4 animate-scaleUp">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <span>🔑</span> Google AI Studio API Key
+        </h3>
+        <button onclick="app.closeAiKeyModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Paste your Gemini API key from <a href="https://aistudio.google.com/" target="_blank" class="text-sky-400 underline font-semibold">Google AI Studio</a>. Your key is stored locally in your browser's <code class="text-sky-300">localStorage</code> and never sent to any third-party server.
+      </p>
+
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-slate-400">Gemini API Key</label>
+        <input
+          type="password"
+          id="modal-api-key-input"
+          placeholder="AIzaSy..."
+          class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-sky-500"
+        />
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="app.closeAiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+          Cancel
+        </button>
+        <button onclick="app.saveAiKeyFromModal()" class="px-5 py-2 rounded-xl text-xs font-bold bg-sky-500 hover:bg-sky-400 text-slate-950">
+          Save & Connect
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: AI SUBJECTIVE EXAM GRADER
+       ========================================================================= -->
+  <div id="ai-grading-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-2xl w-full p-6 sm:p-8 rounded-2xl border border-slate-700 space-y-4 max-h-[90vh] overflow-y-auto animate-scaleUp">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <span>🤖</span> AI University Exam Grader
+        </h3>
+        <button onclick="app.closeAiGradingModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+        <div class="text-[11px] font-bold text-sky-400 uppercase">Question Under Evaluation:</div>
+        <div id="grading-modal-question" class="text-xs sm:text-sm font-semibold text-white"></div>
+        <div class="text-[11px] text-slate-400 pt-1">
+          <strong class="text-slate-300">Rubric:</strong> <span id="grading-modal-rubric"></span>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-slate-400">Type or Paste Your Student Answer:</label>
+        <textarea
+          id="grading-modal-student-answer"
+          rows="6"
+          placeholder="Write your explanation, steps, formulas, or proof here..."
+          class="w-full p-4 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500 font-sans leading-relaxed"
+        ></textarea>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button onclick="app.closeAiGradingModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">
+          Close
+        </button>
+        <button onclick="app.submitAnswerForGrading()" class="px-5 py-2 rounded-xl text-xs font-bold bg-purple-500 hover:bg-purple-400 text-white shadow-lg shadow-purple-500/25">
+          Grade My Answer ▶
+        </button>
+      </div>
+
+      <!-- Evaluation Output -->
+      <div id="grading-modal-output" class="hidden pt-3 border-t border-slate-800"></div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SCRIPTS: DATA, SIMULATORS, DIAGRAMS & APPLICATION CONTROLLER
+       ========================================================================= -->
+  <script src="js/data/unit2-data.js"></script>
+  <script src="js/data/unit3-data.js"></script>
+  <script src="js/data/interview-data.js"></script>
+  <script src="js/data/exam-data.js"></script>
+  <script src="js/data/flashcards-data.js"></script>
+  <script src="js/data/quiz-data.js"></script>
+  <script src="js/data/memory-palace.js"></script>
+  <script src="js/simulators/cpu-scheduler.js"></script>
+  <script src="js/simulators/deadlock-rag.js"></script>
+  <script src="js/simulators/banker.js"></script>
+  <script src="js/simulators/sync-simulators.js"></script>
+  <script src="js/visual-diagrams.js"></script>
+  <script src="js/ai-gemini.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Initialize application on DOM ready
+    document.addEventListener("DOMContentLoaded", () => {
+      window.app.init();
+    });
+  </script>
+</body>
+</html>
